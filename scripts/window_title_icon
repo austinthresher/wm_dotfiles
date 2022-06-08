@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+
+# Polybar script to add a FontAwesome icon next to the focused window title
+
+from i3ipc import Connection, Event
+import logging
+
+icons = {
+    "terminal": "\uf120",
+    "firefox": "\ue007",
+    "qutebrowser": "\uf282",
+    "discord": "\uf392",
+    "mattermost": "\uf392"
+}
+
+i3 = Connection()
+
+def print_window_name():
+    focused = i3.get_tree().find_focused()
+    icon = "\uf2d0"
+    try:
+        for k, v in icons.items():
+            if k in focused.name.lower():
+                icon = v
+                break
+        print(f"  {icon} {focused.name}", flush=True)
+    except:
+        print(f"  {icon}")
+
+def on_window_focus(i3, e):
+    print_window_name()
+
+i3.on("window", on_window_focus)
+
+print_window_name()
+i3.main()

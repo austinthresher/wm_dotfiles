@@ -1,0 +1,12 @@
+{
+    "firefox": "firefox",
+    "x-terminal-emulator": "terminal",
+    "qutebrowser": "edge",
+    "mattermost": "discord",
+    "thunar": "folder-open",
+    "feh": "image",
+    "gnvim": "file-lines",
+    "gvim": "file-lines",
+    "display": "image",
+    "_no_match": "window-maximize"
+}
