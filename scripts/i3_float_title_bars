@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+
+# Listens for i3 windows and enables/disables title bars if floating or not.
+# Also makes any windows that open on Workspace 9 floating by default.
+# Based on this example:
+# https://github.com/altdesktop/i3ipc-python/blob/master/examples/open-floating-on-ws.py
+
+import i3ipc
+import pprint
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+FLOATING_WORKSPACES = ['9']
+
+def is_ws_floating(name):
+    for floating_ws in FLOATING_WORKSPACES:
+        if name.startswith(floating_ws):
+            return True
+    return False
+
+
+i3 = i3ipc.Connection()
+
+def init_floating(container):
+    OFFSET = 32
+    rect = container.rect
+    # Fixes a bug where the actual size is different from the expected size
+    container.command(f"resize set {rect.width} px {rect.height} px")
+    # Avoid positioning too close on-top of another window if possible.
+    # Originally I was checking exact coordinates but windows seem to shift
+    # by a small amount (maybe border size?)
+    ws = i3.get_tree().find_focused().workspace()
+    pos = container.rect.x, container.rect.y
+    print(f"pos start = {pos}")
+    pos_ok = False
+    while not pos_ok:
+        pos_ok = True
+        for c in ws.leaves():
+            if c.id == container.id:
+                continue
+            print(f"{c.rect.x} ?= {pos[0]} && {c.rect.y} ?= {pos[1]}")
+            if abs(c.rect.x - pos[0]) < OFFSET and abs(c.rect.y - pos[1]) < OFFSET:
+                pos = pos[0] + OFFSET, pos[1] + OFFSET
+                print(f"pos move -> {pos}")
+                pos_ok = False
+    print(f"pos end = {pos}")
+    container.command(f"move position {pos[0]} px {pos[1]} px")
+
+def on_window_open(i3, e):
+    ws = i3.get_tree().find_focused().workspace()
+    if is_ws_floating(ws.name):
+        e.container.command('floating enable')
+
+def on_window_floating(i3, e):
+    if 'on' in e.container.floating:
+        e.container.command('border normal 1')
+        init_floating(e.container)
+    else:
+        e.container.command('border pixel 1')
+
+# Set titlebar on any already floating windows, mostly for reloading
+for c in i3.get_tree().leaves():
+    if 'on' in c.floating:
+        c.command('border normal 1')
+
+i3.on('window::new', on_window_open)
+i3.on('window::floating', on_window_floating)
+
+i3.main()

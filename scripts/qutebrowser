@@ -1,0 +1,2 @@
+#!/bin/bash
+QT_SCALE_FACTOR=1.5 $HOME/.qutebrowser/bin/python3 -m qutebrowser "$@"

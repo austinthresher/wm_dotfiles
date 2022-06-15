@@ -62,15 +62,23 @@ settings:
     - ranger
     - --choosedir={}
   fonts.default_family:
-    global: Red Hat Mono
+    global: IBM Plex Sans
   fonts.default_size:
-    global: 12pt
+    global: 8pt
+  fonts.prompts:
+    global: default_size sans-serif
   fonts.statusbar:
-    global: Ubuntu Mono
+    global: default_size default_family
   fonts.tabs.selected:
-    global: 14pt IBM Plex Sans
+    global: default_size default_family
   fonts.tabs.unselected:
-    global: 14pt IBM Plex Sans
+    global: default_size default_family
+  fonts.web.size.default:
+    global: 12
+  fonts.web.size.default_fixed:
+    global: 10
+  fonts.web.size.minimum_logical:
+    global: 1
   input.insert_mode.auto_load:
     global: true
   qt.highdpi:
@@ -115,4 +123,4 @@ settings:
     - utm_term
     - utm_content
   zoom.default:
-    global: '140'
+    global: 100%

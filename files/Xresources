@@ -1,0 +1,13 @@
+Xft.dpi: 140
+Xft.antialias: true
+Xft.hinting: full
+
+XTerm*metaSendsEscape: true
+XTerm*scrollBar: false
+XTerm*foreground: white
+XTerm*background: black
+XTerm*faceName: JetBrains Mono
+XTerm*faceSize: 13
+
+Xcursor.theme: oxy-white
+Xcursor.size: 64

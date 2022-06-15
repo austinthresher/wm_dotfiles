@@ -29,16 +29,14 @@ default_floating_border normal 0
 default_orientation horizontal 
 
 gaps inner 16
-gaps top 22
+gaps top 24
 
 for_window [class=".*"] border pixel 1
 
 for_window [class="Tk"] floating enable
-for_window [class="Tk"] border normal 0
 no_focus [class="Tk"]
 
 for_window [class="feh"] floating enable
-for_window [class="feh"] border normal 0
 
 for_window [class="(?i)firefox.*"] move to workspace number $ws10
 
@@ -52,13 +50,15 @@ set $utext #6272a4
 set $fbar #44475a
 set $ubar #282a36
 # Focused / Unfocused Borders
-set $fborder #f8f8f2
-set $uborder #6272a4
+set $fborder #6272a4
+set $uborder #282a36
+
+set $dbgcol #ff0000
 
 # class                 border bg    text   indicator child_border
-client.focused          $fbar  $fbar $ftext $fborder  $fborder
-client.focused_inactive $ubar  $ubar $utext $uborder  $uborder
-client.unfocused        $ubar  $ubar $utext $uborder  $uborder
+client.focused          $fborder  $fbar $ftext $fborder  $fborder
+client.focused_inactive $uborder  $ubar $utext $uborder  $uborder
+client.unfocused        $uborder  $ubar $utext $uborder  $uborder
 
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -87,11 +87,11 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec x-terminal-emulator -e "bash -l"
+bindsym $mod+Return exec --no-startup-id x-terminal-emulator -e "bash -l"
 # Browser
-bindsym $mod+b exec $HOME/.local/bin/qutebrowser
+bindsym $mod+b exec --no-startup-id $HOME/.local/bin/qutebrowser
 # Do our best to force a single instance of firefox
-bindsym $mod+Shift+f exec $HOME/.firefox/firefox -new-tab about:newtab; [class="(?i)firefox.*"] focus
+bindsym $mod+Shift+f exec --no-startup-id $HOME/.firefox/firefox -new-tab about:newtab; [class="(?i)firefox.*"] focus
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -137,6 +137,7 @@ bindsym $mod+f fullscreen toggle
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
+#bindsym --whole-window $mod+button3 floating toggle
 
 # change focus between tiling / floating windows
 #bindsym $mod+space focus mode_toggle
@@ -204,8 +205,8 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-bindsym Ctrl+Mod1+l exec "xautolock -locknow"
-bindsym $mod+space exec "rofi -modi drun -show drun -show-icons"
+bindsym Ctrl+Mod1+l exec --no-startup-id "xautolock -locknow"
+bindsym $mod+space exec --no-startup-id "rofi -modi drun -show drun -show-icons"
 
 # Polybar handles logging out / exiting i3 session
 exec_always --no-startup-id "$HOME/.config/polybar/launch.sh"
@@ -218,7 +219,9 @@ exec_always --no-startup-id "xset dpms 0 0 1200"
 # Use xautolock to lock after 15 minutes
 exec_always --no-startup-id "xautolock -time 900 -locker $HOME/.wm_dotfiles/scripts/lock.sh &"
 # Workspace icons
-exec_always --no-startup-id exec i3-workspace-names-daemon -d ' '
+exec_always --no-startup-id exec i3-workspace-names-daemon -n -d ' '
+# Floating window customizations
+exec_always --no-startup-id exec $HOME/.wm_dotfiles/scripts/i3_float_title_bars
 # Notifications
 exec_always --no-startup-id exec $HOME/.local/bin/dunst
 # Open Firefox for work communication on workspace 10

@@ -1,0 +1,10 @@
+if command -v feh &> /dev/null; then
+    [ -e "$HOME/.wallpaper" ] && feh --bg-fill "$HOME/.wallpaper"
+fi
+
+if command -v picom &> /dev/null; then
+    picom -b
+fi
+
+xrandr --dpi 140
+exec i3

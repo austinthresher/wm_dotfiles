@@ -8,8 +8,12 @@ fi
 for SRC in $HOME/.wm_dotfiles/config/*; do
     DST="$HOME/.config/"$(basename "$SRC")
     if [ -L "$DST" -o ! -d "$DST" ]; then
+        [ -L "$DST" ] && rm "$DST"
         ln -f -s "$SRC" "$DST"
     else
         echo "$DST already exists and is not a symlink. Skipping."
     fi
 done
+
+ln -f -s files/Xresources $HOME/.Xresources
+ln -f -s files/xsessionrc $HOME/.xsessionrc
